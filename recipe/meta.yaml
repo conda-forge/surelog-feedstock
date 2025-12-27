@@ -10,7 +10,7 @@ source:
 
 build:
   number: 1
-  skip: true  # [win]
+  skip: true  # [win or py<313]
   run_exports:
     - {{ pin_subpackage('surelog', max_pin='x.x') }}
 
@@ -30,7 +30,7 @@ requirements:
     - uhdm ={{ version }}
     - zlib
     # Embeds a python interpreter
-    - python <3.13
+    - python
     - swig
     - orderedmultidict
   run:
