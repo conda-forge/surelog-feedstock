@@ -30,7 +30,7 @@ requirements:
     - uhdm ={{ version }}
     - zlib
     # Embeds a python interpreter
-    - python
+    - python <3.13
     - swig
     - orderedmultidict
   run:
