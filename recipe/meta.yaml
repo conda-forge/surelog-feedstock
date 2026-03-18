@@ -2,7 +2,7 @@
 
 package:
   name: surelog
-  version: {{ version }}
+  version: "{{ version }}"
 
 source:
   url: https://github.com/chipsalliance/surelog/archive/refs/tags/v{{ version }}.tar.gz
