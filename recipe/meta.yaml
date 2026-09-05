@@ -7,6 +7,8 @@ package:
 source:
   url: https://github.com/chipsalliance/surelog/archive/refs/tags/v{{ version }}.tar.gz
   sha256: 5d3895ebaa08890db858988143264e2bc84c1dc6d36344628dc9f4a2aee2027b
+  patches:
+    - use-python3-string-api.patch
 
 build:
   number: 0
