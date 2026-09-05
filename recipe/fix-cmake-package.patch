@@ -1,0 +1,84 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -566,7 +566,7 @@
+   $<INSTALL_INTERFACE:include>)
+ target_include_directories(surelog PUBLIC
+   $<BUILD_INTERFACE:${ANTLR_INCLUDE_DIR}>
+-  $<INSTALL_INTERFACE:include>)
++  $<INSTALL_INTERFACE:include/antlr4-runtime>)
+ target_include_directories(surelog PUBLIC
+   $<BUILD_INTERFACE:${UHDM_INCLUDE_DIRS}>
+   $<INSTALL_INTERFACE:include>)
+@@ -575,7 +575,7 @@
+   $<INSTALL_INTERFACE:include>)
+ 
+ if (SURELOG_WITH_PYTHON)
+-  target_include_directories(surelog PUBLIC ${Python3_INCLUDE_DIRS}) # Keep this at the end
++  target_include_directories(surelog PRIVATE ${Python3_INCLUDE_DIRS}) # Keep this at the end
+   target_compile_definitions(surelog PUBLIC SURELOG_WITH_PYTHON)
+ endif()
+ add_executable(surelog-bin ${PROJECT_SOURCE_DIR}/src/main.cpp)
+@@ -619,7 +619,13 @@
+ endif()
+ 
+ target_link_libraries(surelog-bin PUBLIC surelog)
+-target_link_libraries(surelog PUBLIC ${ANTLR_LIBRARY})
++if(SURELOG_USE_HOST_ANTLR)
++  target_link_libraries(surelog PUBLIC
++    $<BUILD_INTERFACE:${ANTLR_LIBRARY}>
++    $<INSTALL_INTERFACE:antlr4-runtime>)
++else()
++  target_link_libraries(surelog PUBLIC ${ANTLR_LIBRARY})
++endif()
+ target_link_libraries(surelog PUBLIC ${UHDM_LIBRARY})
+ 
+ if(NOT SURELOG_USE_HOST_UHDM)
+@@ -648,7 +654,7 @@
+ if (SURELOG_WITH_ZLIB AND ZLIB_LIBRARY)
+   target_compile_definitions(surelog PRIVATE SURELOG_WITH_ZLIB)
+   target_include_directories(surelog PRIVATE ${ZLIB_INCLUDE_DIRS})
+-  target_link_libraries(surelog PUBLIC ${ZLIB_LIBRARY})
++  target_link_libraries(surelog PUBLIC ZLIB::ZLIB)
+   set(ZLIB_PC_LINK "-lz")
+ else()
+   set(ZLIB_PC_LINK "")
+@@ -996,7 +1002,8 @@
+ configure_package_config_file(
+   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/configs/SurelogConfig.cmake.in
+   ${CMAKE_CURRENT_BINARY_DIR}/SurelogConfig.cmake
+-  INSTALL_DESTINATION cmake
++  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Surelog
++  PATH_VARS CMAKE_INSTALL_BINDIR CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR
+ )
+ write_basic_package_version_file(
+   ${CMAKE_CURRENT_BINARY_DIR}/SurelogConfigVersion.cmake
+diff --git a/cmake/configs/SurelogConfig.cmake.in b/cmake/configs/SurelogConfig.cmake.in
+--- a/cmake/configs/SurelogConfig.cmake.in
++++ b/cmake/configs/SurelogConfig.cmake.in
+@@ -2,11 +2,20 @@
+ 
+ @PACKAGE_INIT@
+ 
+-include(${CMAKE_CURRENT_LIST_DIR}/SurelogTargets.cmake)
++set_and_check(SURELOG_BIN_DIR "@PACKAGE_CMAKE_INSTALL_BINDIR@")
++set_and_check(SURELOG_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
++set_and_check(SURELOG_INCLUDE_DIRS "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
++set_and_check(SURELOG_LIB_DIR "@PACKAGE_CMAKE_INSTALL_LIBDIR@")
+ 
+-set_and_check(SURELOG_BIN_DIR @CMAKE_INSTALL_FULL_BINDIR@)
+-set_and_check(SURELOG_INCLUDE_DIR @CMAKE_INSTALL_FULL_INCLUDEDIR@)
+-set_and_check(SURELOG_INCLUDE_DIRS @CMAKE_INSTALL_FULL_INCLUDEDIR@)
+-set_and_check(SURELOG_LIB_DIR @CMAKE_INSTALL_FULL_LIBDIR@)
++include(CMakeFindDependencyMacro)
++if(@SURELOG_USE_HOST_UHDM@)
++  find_dependency(CapnProto CONFIG)
++  find_dependency(UHDM CONFIG)
++endif()
++if(@SURELOG_WITH_ZLIB@ AND @ZLIB_FOUND@)
++  find_dependency(ZLIB)
++endif()
+ 
++include(${CMAKE_CURRENT_LIST_DIR}/SurelogTargets.cmake)
++
+ check_required_components(Surelog)

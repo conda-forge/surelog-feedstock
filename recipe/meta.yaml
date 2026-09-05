@@ -9,6 +9,7 @@ source:
   sha256: 5d3895ebaa08890db858988143264e2bc84c1dc6d36344628dc9f4a2aee2027b
   patches:
     - use-python3-string-api.patch
+    - fix-cmake-package.patch
 
 build:
   number: 0
@@ -28,6 +29,7 @@ requirements:
     - antlr
     - antlr-cpp-runtime
     - capnproto
+    - libpython {{ python }}  # [py>=311]
     - nlohmann_json
     - uhdm ={{ version }}
     - zlib
@@ -38,13 +40,22 @@ requirements:
   run:
     - antlr-cpp-runtime
     - capnproto
-    - libpython  # [py>=311]
+    - libpython {{ python }}  # [py>=311]
     - uhdm ={{ version }}
     - python
+    - zlib
 
 test:
+  files:
+    - test-cmake
+  requires:
+    - {{ compiler('cxx') }}
+    - cmake
+    - ninja
   commands:
-    - test -f $PREFIX/bin/surelog
+    - surelog --version
+    - cmake -S test-cmake -B test-cmake-build -G Ninja
+    - cmake --build test-cmake-build
 
 about:
   home: https://github.com/chipsalliance/Surelog
