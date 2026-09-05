@@ -38,6 +38,7 @@ requirements:
   run:
     - antlr-cpp-runtime
     - capnproto
+    - libpython  # [py>=311]
     - uhdm ={{ version }}
     - python
 
