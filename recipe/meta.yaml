@@ -52,6 +52,7 @@ test:
     - {{ compiler('cxx') }}
     - cmake
     - ninja
+    - pkg-config
   commands:
     - surelog --version
     - cmake -S test-cmake -B test-cmake-build -G Ninja
