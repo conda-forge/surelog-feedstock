@@ -1,0 +1,49 @@
+diff --git a/src/API/PythonAPI.cpp b/src/API/PythonAPI.cpp
+--- a/src/API/PythonAPI.cpp
++++ b/src/API/PythonAPI.cpp
+@@ -288,8 +288,8 @@ void PythonAPI::evalScript(const std::string& function,
+   antlr4::ParserRuleContext* ctx = (antlr4::ParserRuleContext*)ctx1;
+   PyEval_AcquireThread(listener->getPyThreadState());
+   PyObject *pModuleName, *pModule, *pFunc;
+   PyObject *pArgs, *pValue;
+-  pModuleName = PyString_FromString("__main__");
++  pModuleName = PyUnicode_FromString("__main__");
+   pModule = PyImport_Import(pModuleName);
+   Py_DECREF(pModuleName);
+   pFunc = PyObject_GetAttrString(pModule, function.c_str());
+@@ -326,7 +326,7 @@ std::string PythonAPI::evalScript(const std::string& module,
+   PyObject *pModuleName, *pModule, *pFunc;
+   PyObject *pArgs, *pValue;
+ 
+-  pModuleName = PyString_FromString(module.c_str());
++  pModuleName = PyUnicode_FromString(module.c_str());
+   pModule = PyImport_Import(pModuleName);
+ 
+   Py_DECREF(pModuleName);
+@@ -337,7 +337,7 @@ std::string PythonAPI::evalScript(const std::string& module,
+     if (pFunc && PyCallable_Check(pFunc)) {
+       pArgs = PyTuple_New(args.size());
+       for (uint32_t i = 0; i < args.size(); ++i) {
+-        pValue = PyString_FromString(args[i].c_str());
++        pValue = PyUnicode_FromString(args[i].c_str());
+         /* pValue reference stolen here: */
+         PyTuple_SetItem(pArgs, i, pValue);
+       }
+@@ -398,7 +398,7 @@ bool PythonAPI::evalScriptPerFile(const std::filesystem::path& script,
+   std::string function = "slUserCallbackPerFile";
+   PyObject *pModuleName, *pModule, *pFunc;
+   PyObject *pArgs, *pValue;
+-  pModuleName = PyString_FromString("__main__");
++  pModuleName = PyUnicode_FromString("__main__");
+   pModule = PyImport_Import(pModuleName);
+   Py_DECREF(pModuleName);
+   pFunc = PyObject_GetAttrString(pModule, function.c_str());
+@@ -437,7 +437,7 @@ bool PythonAPI::evalScript(const std::filesystem::path& script,
+   std::string function = "slUserCallbackPerDesign";
+   PyObject *pModuleName, *pModule, *pFunc;
+   PyObject *pArgs, *pValue;
+-  pModuleName = PyString_FromString("__main__");
++  pModuleName = PyUnicode_FromString("__main__");
+   pModule = PyImport_Import(pModuleName);
+   Py_DECREF(pModuleName);
+   pFunc = PyObject_GetAttrString(pModule, function.c_str());
