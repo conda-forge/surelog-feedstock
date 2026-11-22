@@ -24,7 +24,7 @@ requirements:
     - {{ compiler('cxx') }}
     - cmake
     - make
-    - pkg-config
+    - pkgconf
   host:
     - antlr
     - antlr-cpp-runtime
@@ -52,7 +52,7 @@ test:
     - {{ compiler('cxx') }}
     - cmake
     - ninja
-    - pkg-config
+    - pkgconf
   commands:
     - surelog --version
     - cmake -S test-cmake -B test-cmake-build -G Ninja
