@@ -1,4 +1,4 @@
-{% set version = "1.89" %}
+{% set version = "1.90" %}
 
 package:
   name: surelog
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/chipsalliance/surelog/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: a832b0231fbcbb180c452005f89a91b013fb75c86222556e425ca3d9591dafe0
+  sha256: b306236715491801b90afb794c93051d81a3194b5c88fff48726ac3e0c7ae0a1
   patches:
     - use-python3-string-api.patch
     - fix-cmake-package.patch
@@ -24,7 +24,7 @@ requirements:
     - {{ compiler('cxx') }}
     - cmake
     - make
-    - pkg-config
+    - pkgconf
   host:
     - antlr
     - antlr-cpp-runtime
@@ -52,7 +52,7 @@ test:
     - {{ compiler('cxx') }}
     - cmake
     - ninja
-    - pkg-config
+    - pkgconf
   commands:
     - surelog --version
     - cmake -S test-cmake -B test-cmake-build -G Ninja
