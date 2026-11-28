@@ -1,4 +1,4 @@
-{% set version = "1.90" %}
+{% set version = "1.91" %}
 
 package:
   name: surelog
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/chipsalliance/surelog/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: b306236715491801b90afb794c93051d81a3194b5c88fff48726ac3e0c7ae0a1
+  sha256: 2e443fbd00b5ca5aba36d16d31268d3de4ee6baa000bd4f2d5716c94507683ee
   patches:
     - use-python3-string-api.patch
     - fix-cmake-package.patch
